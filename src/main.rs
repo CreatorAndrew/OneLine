@@ -3,6 +3,7 @@ use std::fs;
 use std::io;
 use std::path::Path;
 use std::path::PathBuf;
+use std::process::Command;
 
 fn hide_console_window() {
     use std::ptr;
@@ -163,11 +164,12 @@ fn main() {
         if env::consts::OS == "windows" {
             line = line.replace("/", "\\").replace(" \\", " /");
         }
-        line = line.replace(os_drive, root_dir);
-        let (code, output, error) = run_script::run_script!(line).unwrap();
-        println!("{}", code);
-        println!("{}", output);
-        println!("{}", error);
+        if line.starts_with("start") {
+            Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
+        } else {
+            let (code, output, error) = run_script::run_script!(line).unwrap();
+            println!("{}", output);
+        }
     }
     if env::consts::OS == "windows" {
         show_console_window();
