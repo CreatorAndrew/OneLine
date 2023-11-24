@@ -5,26 +5,29 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::process::Command;
 
-fn hide_console_window() {
-    use std::ptr;
-    use winapi::um::wincon::GetConsoleWindow;
-    use winapi::um::winuser::{ShowWindow, SW_HIDE};
-    let window = unsafe {GetConsoleWindow()};
-    if window != ptr::null_mut() {
-        unsafe {
-            ShowWindow(window, SW_HIDE);
+#[cfg(target_family = "windows")]
+mod windows {
+    pub fn hide_console_window() {
+        use std::ptr;
+        use winapi::um::wincon::GetConsoleWindow;
+        use winapi::um::winuser::{ShowWindow, SW_HIDE};
+        let window = unsafe {GetConsoleWindow()};
+        if window != ptr::null_mut() {
+            unsafe {
+                ShowWindow(window, SW_HIDE);
+            }
         }
     }
-}
-
-fn show_console_window() {
-    use std::ptr;
-    use winapi::um::wincon::GetConsoleWindow;
-    use winapi::um::winuser::{ShowWindow, SW_SHOW};
-    let window = unsafe {GetConsoleWindow()};
-    if window != ptr::null_mut() {
-        unsafe {
-            ShowWindow(window, SW_SHOW);
+    
+    pub fn show_console_window() {
+        use std::ptr;
+        use winapi::um::wincon::GetConsoleWindow;
+        use winapi::um::winuser::{ShowWindow, SW_SHOW};
+        let window = unsafe {GetConsoleWindow()};
+        if window != ptr::null_mut() {
+            unsafe {
+                ShowWindow(window, SW_SHOW);
+            }
         }
     }
 }
@@ -77,7 +80,8 @@ fn main() {
     let os_drive;
     let root_dir;
     if env::consts::OS == "windows" {
-        hide_console_window();
+        #[cfg(target_family = "windows")]
+        windows::hide_console_window();
         os_drive = "C:/";
         root_dir = "C:/";
     }
@@ -172,6 +176,7 @@ fn main() {
         }
     }
     if env::consts::OS == "windows" {
-        show_console_window();
+        #[cfg(target_family = "windows")]
+        windows::show_console_window();
     }
 }
