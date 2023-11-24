@@ -167,7 +167,7 @@ fn main() {
         if line.starts_with("start") {
             Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
         } else {
-            let (code, output, error) = run_script::run_script!(line).unwrap();
+            let (code, output, error) = run_script::run_script!("@echo off\n".to_string() + line.as_str()).unwrap();
             println!("{}", output);
         }
     }
