@@ -173,8 +173,7 @@ fn main() {
                 let (code, output, error) = run_script::run_script!("@echo off\n".to_string() + line.as_str()).unwrap();
                 println!("{}", output);
             }
-        }
-        else {
+        } else {
             if line.ends_with("&") {
                 Command::new("sh").arg("-c").arg("\"".to_string() + line.replacen("&", "", 1).replace("\"", "\\\"").trim_end() + "\"").spawn().expect("");
             } else {
