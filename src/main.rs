@@ -175,8 +175,6 @@ fn main() {
             println!("{}", output);
         }
     }
-    if env::consts::OS == "windows" {
-        #[cfg(target_family = "windows")]
-        windows::show_console_window();
-    }
+    #[cfg(target_family = "windows")]
+    windows::show_console_window();
 }
