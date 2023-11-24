@@ -168,8 +168,8 @@ fn main() {
         println!("{}", code);
         println!("{}", output);
         println!("{}", error);
-        if env::consts::OS == "windows" {
-            show_console_window();
-        }
+    }
+    if env::consts::OS == "windows" {
+        show_console_window();
     }
 }
