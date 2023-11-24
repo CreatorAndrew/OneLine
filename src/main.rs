@@ -8,7 +8,6 @@ fn hide_console_window() {
     use std::ptr;
     use winapi::um::wincon::GetConsoleWindow;
     use winapi::um::winuser::{ShowWindow, SW_HIDE};
-
     let window = unsafe {GetConsoleWindow()};
     if window != ptr::null_mut() {
         unsafe {
@@ -21,7 +20,6 @@ fn show_console_window() {
     use std::ptr;
     use winapi::um::wincon::GetConsoleWindow;
     use winapi::um::winuser::{ShowWindow, SW_SHOW};
-
     let window = unsafe {GetConsoleWindow()};
     if window != ptr::null_mut() {
         unsafe {
