@@ -167,12 +167,20 @@ fn main() {
         }
         if env::consts::OS == "windows" {
             line = line.replace("/", "\\").replace(" \\", " /");
+            if line.starts_with("start") {
+                Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
+            } else {
+                let (code, output, error) = run_script::run_script!("@echo off\n".to_string() + line.as_str()).unwrap();
+                println!("{}", output);
+            }
         }
-        if line.starts_with("start") {
-            Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
-        } else {
-            let (code, output, error) = run_script::run_script!("@echo off\n".to_string() + line.as_str()).unwrap();
-            println!("{}", output);
+        else {
+            if line.ends_with("&") {
+                Command::new("sh").arg("-c").arg("\"".to_string() + line.replacen("&", "", 1).replace("\"", "\\\"").trim_end() + "\"").spawn().expect("");
+            } else {
+                let (code, output, error) = run_script::run_script!(line).unwrap();
+                println!("{}", output);
+            }
         }
     }
     #[cfg(target_family = "windows")]
