@@ -4,6 +4,32 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
+fn hide_console_window() {
+    use std::ptr;
+    use winapi::um::wincon::GetConsoleWindow;
+    use winapi::um::winuser::{ShowWindow, SW_HIDE};
+
+    let window = unsafe {GetConsoleWindow()};
+    if window != ptr::null_mut() {
+        unsafe {
+            ShowWindow(window, SW_HIDE);
+        }
+    }
+}
+
+fn show_console_window() {
+    use std::ptr;
+    use winapi::um::wincon::GetConsoleWindow;
+    use winapi::um::winuser::{ShowWindow, SW_SHOW};
+
+    let window = unsafe {GetConsoleWindow()};
+    if window != ptr::null_mut() {
+        unsafe {
+            ShowWindow(window, SW_SHOW);
+        }
+    }
+}
+
 fn drive(path: String) -> String {
     let letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                                "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
@@ -52,6 +78,7 @@ fn main() {
     let os_drive;
     let root_dir;
     if env::consts::OS == "windows" {
+        hide_console_window();
         os_drive = "C:/";
         root_dir = "C:/";
     }
@@ -143,5 +170,8 @@ fn main() {
         println!("{}", code);
         println!("{}", output);
         println!("{}", error);
+        if env::consts::OS == "windows" {
+            show_console_window();
+        }
     }
 }
