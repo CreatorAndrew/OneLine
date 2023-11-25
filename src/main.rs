@@ -124,8 +124,8 @@ fn main() {
     }
     for i in 0..args.len() {
         let mut line = "".to_string() + &args[i].replace("\\", "/");
-        let temp:Vec<&str> = line.split(" ").collect();
         let mut sublines: Vec<String> = Vec::new();
+        let temp:Vec<&str> = line.split(" ").collect();
         for temp_line in temp {
             if temp_line.contains("../") {
                 sublines.push(temp_line.to_string());
