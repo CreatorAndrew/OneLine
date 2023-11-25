@@ -84,8 +84,7 @@ fn main() {
         windows::hide_console_window();
         os_drive = "C:/";
         root_dir = "C:/";
-    }
-    else {
+    } else {
         os_drive = "Z:/";
         root_dir = "/";
     }
