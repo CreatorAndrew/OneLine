@@ -164,7 +164,7 @@ fn main() {
         }
         line = line.replace(os_drive, root_dir);
         if env::consts::OS == "windows" {
-            line = line.replace("/", "\\").replace(" \\", " /");
+            line = line.replace("/", "\\").replace("\\\\", "\\").replace(" \\", " /");
             if line.starts_with("start") {
                 Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
             } else {
