@@ -171,14 +171,14 @@ fn main() {
                 Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
             } else {
                 let (code, output, error) = run_script::run_script!("@echo off\n".to_string() + line.as_str()).unwrap();
-                println!("{}", output);
+                print!("{}", output);
             }
         } else {
             if line.ends_with("&") {
                 Command::new("sh").arg("-c").arg(line.replacen("&", "", 1)).spawn().expect("");
             } else {
                 let (code, output, error) = run_script::run_script!(line).unwrap();
-                println!("{}", output);
+                print!("{}", output);
             }
         }
     }
