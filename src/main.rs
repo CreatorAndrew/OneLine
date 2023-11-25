@@ -168,15 +168,13 @@ fn main() {
             if line.starts_with("start") {
                 Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
             } else {
-                let output = Command::new("cmd").arg("/c").arg(line).output().expect("");
-                io::stdout().write_all(&output.stdout).unwrap();
+                io::stdout().write_all(&Command::new("cmd").arg("/c").arg(line).output().expect("").stdout).unwrap();
             }
         } else {
             if line.ends_with("&") {
                 Command::new("sh").arg("-c").arg(line.replacen("&", "", 1)).spawn().expect("");
             } else {
-                let output = Command::new("sh").arg("-c").arg(line).output().expect("");
-                io::stdout().write_all(&output.stdout).unwrap();
+                io::stdout().write_all(&Command::new("sh").arg("-c").arg(line).output().expect("").stdout).unwrap();
             }
         }
     }
