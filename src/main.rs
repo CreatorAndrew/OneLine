@@ -70,9 +70,9 @@ fn command_found(program: &str) -> bool {
     false
 }
 
-fn exe_path() -> io::Result<PathBuf> {
-    let exe_path = env::current_exe()?;
-    Ok(exe_path)
+fn working_dir() -> io::Result<PathBuf> {
+    let working_dir = env::current_dir()?;
+    Ok(working_dir)
 }
 
 fn main() {
@@ -87,8 +87,7 @@ fn main() {
         os_drive = "Z:/";
         root_dir = "/";
     }
-    let mut here = exe_path().expect("").display().to_string().replace("\\", "/");
-    here = here[..here.rfind("/").unwrap()].to_string();
+    let mut here = working_dir().expect("").display().to_string().replace("\\", "/");
     if env::consts::OS != "windows" {
         here = "Z:".to_string() + &here;
     }
