@@ -18,7 +18,7 @@ mod windows {
             }
         }
     }
-    
+
     pub fn show_console_window() {
         use std::ptr;
         use winapi::um::wincon::GetConsoleWindow;
