@@ -145,8 +145,6 @@ fn main() {
                 prev[j] = "../".to_string();
             }
             path[j] += "/";
-        }
-        for j in 0..prev.len() {
             line = line.replacen(&prev[j], &path[j], 1)
         }
         line = line.replace("./", &(here.to_string() + "/")) + "/";
