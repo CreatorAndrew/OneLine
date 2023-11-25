@@ -45,7 +45,7 @@ fn drive(path: String) -> String {
     return drive;
 }
 
-fn exists(line: String, seg: String, os_drive: &str, root_dir: &str) -> bool{
+fn exists(line: String, seg: String, os_drive: &str, root_dir: &str) -> bool {
     if line.contains(":/") {
         return Path::new(&(line[line.rfind(":/").unwrap() - 1..].replace("\"", "").replacen(os_drive, root_dir, 1).to_string() +
                                 &seg.replacen(&drive(seg.to_string()), "", 1))).exists();
