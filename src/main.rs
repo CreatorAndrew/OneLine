@@ -149,7 +149,7 @@ fn main() {
             path[j] += "/";
             if temp.contains("/../") {
                 if !temp.contains(&previous[j]) {
-                    panic!("Support for multiple nonconsecutive `../`'s in the path has not yet been implemented.")
+                    panic!("Support for nonconsecutive instances of `../` in the path has not yet been implemented.")
                 }
                 if temp.find("/../").unwrap() > 1 {
                     if temp[temp.find("/../").unwrap() - 2..temp.find("/../").unwrap()].to_string() == ".." {
