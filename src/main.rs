@@ -175,7 +175,7 @@ fn main() {
             }
         } else {
             if line.ends_with("&") {
-                Command::new("sh").arg("-c").arg("\"".to_string() + line.replacen("&", "", 1).replace("\"", "\\\"").trim_end() + "\"").spawn().expect("");
+                Command::new("sh").arg("-c").arg(line.replacen("&", "", 1)).spawn().expect("");
             } else {
                 let (code, output, error) = run_script::run_script!(line).unwrap();
                 println!("{}", output);
