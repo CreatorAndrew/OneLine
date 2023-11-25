@@ -163,18 +163,23 @@ fn main() {
                 line += "/";
             }
         }
+        line = line.replace(os_drive, root_dir);
         if env::consts::OS == "windows" {
             line = line.replace("/", "\\").replace(" \\", " /");
             if line.starts_with("start") {
                 Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
             } else {
-                io::stdout().write_all(&Command::new("cmd").arg("/c").arg(line).output().expect("").stdout).unwrap();
+                let output = Command::new("cmd").arg("/c").arg(line).output().expect("");
+                io::stdout().write_all(&output.stdout).unwrap();
+                io::stdout().write_all(&output.stderr).unwrap();
             }
         } else {
             if line.ends_with("&") {
                 Command::new("sh").arg("-c").arg(line.replacen("&", "", 1)).spawn().expect("");
             } else {
-                io::stdout().write_all(&Command::new("sh").arg("-c").arg(line).output().expect("").stdout).unwrap();
+                let output = Command::new("sh").arg("-c").arg(line).output().expect("");
+                io::stdout().write_all(&output.stdout).unwrap();
+                io::stdout().write_all(&output.stderr).unwrap();
             }
         }
     }
