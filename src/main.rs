@@ -123,20 +123,33 @@ fn main() {
         index += 1;
     }
     for i in 0..args.len() {
-        let mut line = "".to_string() + &args[i];
-        let mut path = "".to_string() + &here;
-        let mut prev = "".to_string();
-        while line.contains("../") {
-            line = line.replacen("../", "", 1);
-            path = path[..path.rfind("/").unwrap()].to_string();
-            prev += "../";
+        let mut line = "".to_string() + &args[i].replace("\\", "/");
+        let temp:Vec<&str> = line.split(" ").collect();
+        let mut sublines: Vec<String> = Vec::new();
+        for temp_line in temp {
+            if temp_line.contains("../") {
+                sublines.push(temp_line.to_string());
+            }
         }
-        path += "/";
-        if prev == "".to_string() {
-            prev = "../".to_string();
+        let mut path: Vec<String> = Vec::new();
+        let mut prev: Vec<String> = Vec::new();
+        for j in 0..sublines.len() {
+            path.push("".to_string() + &here);
+            prev.push("".to_string());
+            while sublines[j].contains("../") {
+                sublines[j] = sublines[j].replacen("../", "", 1);
+                path[j] = path[j][..path[j].rfind("/").unwrap()].to_string();
+                prev[j] += "../";
+            }
+            if prev[j].is_empty() {
+                prev[j] = "../".to_string();
+            }
+            path[j] += "/";
         }
-        line = "".to_string() + &args[i];
-        line = line.replace("\\", "/").replacen(&prev, &path, 1).replace("./", &(here.to_string() + "/")) + "/";
+        for j in 0..prev.len() {
+            line = line.replacen(&prev[j], &path[j], 1)
+        }
+        line = line.replace("./", &(here.to_string() + "/")) + "/";
         let mut segs: Vec<String> = Vec::new();
         while line.contains("/") {
             segs.push(line[..line.find("/").unwrap()].to_string());
@@ -164,7 +177,7 @@ fn main() {
         }
         line = line.replace(os_drive, root_dir);
         if env::consts::OS == "windows" {
-            line = line.replace("/", "\\").replace("\\\\", "\\").replace(" \\", " /");
+            line = line.replace("/", "\\").replace(" \\", " /");
             if line.starts_with("start") {
                 Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
             } else {
