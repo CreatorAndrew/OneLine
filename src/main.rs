@@ -165,7 +165,12 @@ fn main() {
                 line = line.replacen(&previous[j], &path[j], 1);
             }
         }
-        line = line.replace("'./'", dot).replace("'../'", dot_dot).replace("'", "\"").replace("./", &(here.to_string() + "/")).replace(dot_dot, "../").replace(dot, "./") + "/";
+        line = line.replace("'./'", dot)
+                   .replace("'../'", dot_dot)
+                   .replace("'", "\"")
+                   .replace("./", &(here.to_string() + "/"))
+                   .replace(dot_dot, "../")
+                   .replace(dot, "./") + "/";
         let mut segments: Vec<String> = Vec::new();
         while line.contains("/") {
             segments.push(line[..line.find("/").unwrap()].to_string());
