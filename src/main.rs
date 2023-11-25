@@ -1,8 +1,7 @@
 use std::env;
 use std::fs;
-use std::io;
-use std::path::Path;
-use std::path::PathBuf;
+use std::io::{self, Write};
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 #[cfg(target_family = "windows")]
@@ -169,15 +168,15 @@ fn main() {
             if line.starts_with("start") {
                 Command::new("cmd").arg("/c").arg(line.replacen("start", "", 1)).spawn().expect("");
             } else {
-                let (code, output, error) = run_script::run_script!("@echo off\n".to_string() + line.as_str()).unwrap();
-                print!("{}", output);
+                let output = Command::new("cmd").arg("/c").arg(line).output().expect("");
+                io::stdout().write_all(&output.stdout).unwrap();
             }
         } else {
             if line.ends_with("&") {
                 Command::new("sh").arg("-c").arg(line.replacen("&", "", 1)).spawn().expect("");
             } else {
-                let (code, output, error) = run_script::run_script!(line).unwrap();
-                print!("{}", output);
+                let output = Command::new("sh").arg("-c").arg(line).output().expect("");
+                io::stdout().write_all(&output.stdout).unwrap();
             }
         }
     }
