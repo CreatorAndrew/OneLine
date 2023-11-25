@@ -125,7 +125,7 @@ fn main() {
     for i in 0..args.len() {
         let dot = "CURRENT DIRECTORY PLACEHOLDER HERE";
         let dot_dot = "PREVIOUS DIRECTORY PLACEHOLDER HERE";
-        let mut line = "".to_string() + &args[i].replace("\\", "/");
+        let mut line = "".to_string() + &args[i].replace("\\", "/").replace("'../'", dot_dot);
         let mut sublines: Vec<String> = Vec::new();
         let temp:Vec<&str> = line.split(" ").collect();
         for temp_line in temp {
@@ -166,7 +166,6 @@ fn main() {
             }
         }
         line = line.replace("'./'", dot)
-                   .replace("'../'", dot_dot)
                    .replace("'", "\"")
                    .replace("./", &(here.to_string() + "/"))
                    .replace(dot_dot, "../")
