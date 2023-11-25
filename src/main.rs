@@ -123,6 +123,7 @@ fn main() {
         index += 1;
     }
     for i in 0..args.len() {
+        let placeholder = "(PREVIOUS DIRECTORY PLACEHOLDER HERE)";
         let mut line = "".to_string() + &args[i].replace("\\", "/");
         let mut sublines: Vec<String> = Vec::new();
         let temp:Vec<&str> = line.split(" ").collect();
@@ -132,44 +133,60 @@ fn main() {
             }
         }
         let mut path: Vec<String> = Vec::new();
-        let mut prev: Vec<String> = Vec::new();
+        let mut previous: Vec<String> = Vec::new();
         for j in 0..sublines.len() {
             path.push("".to_string() + &here);
-            prev.push("".to_string());
+            previous.push("".to_string());
+            let temp = "".to_string() + &sublines[j];
             while sublines[j].contains("../") {
                 sublines[j] = sublines[j].replacen("../", "", 1);
                 path[j] = path[j][..path[j].rfind("/").unwrap()].to_string();
-                prev[j] += "../";
+                previous[j] += "../";
             }
-            if prev[j].is_empty() {
-                prev[j] = "../".to_string();
+            if previous[j].is_empty() {
+                previous[j] = "../".to_string();
             }
             path[j] += "/";
-            line = line.replacen(&prev[j], &path[j], 1)
+            if temp.contains("/../") {
+                if !temp.contains(&previous[j]) {
+                    panic!("Support for multiple nonconsecutive `../`'s at different locations in the path has not yet been implemented.")
+                }
+                if temp.find("/../").unwrap() > 1 {
+                    if temp[temp.find("/../").unwrap() - 2..temp.find("/../").unwrap()].to_string() == ".." {
+                        line = line.replacen(&previous[j], &path[j], 1);
+                    } else {
+                        line = line.replacen("../", placeholder, 1);
+                    }
+                } else {
+                    line = line.replacen("../", placeholder, 1);
+                }
+            } else {
+                line = line.replacen(&previous[j], &path[j], 1);
+            }
         }
-        line = line.replace("./", &(here.to_string() + "/")) + "/";
-        let mut segs: Vec<String> = Vec::new();
+        line = line.replace("./", &(here.to_string() + "/")).replace(placeholder, "../") + "/";
+        let mut segments: Vec<String> = Vec::new();
         while line.contains("/") {
-            segs.push(line[..line.find("/").unwrap()].to_string());
+            segments.push(line[..line.find("/").unwrap()].to_string());
             line = line[line.find("/").unwrap() + 1..].to_string();
             if !line.contains("/") {
                 line = "".to_string();
             }
         }
-        for j in 0..segs.len() {
+        for j in 0..segments.len() {
             let mut quote = false;
-            if segs[j].contains(" ") {
-                quote = exists(line.clone(), "".to_string() + segs[j].as_str(), os_drive, root_dir) || command_found(segs[j].as_str());
+            if segments[j].contains(" ") {
+                quote = exists(line.clone(), "".to_string() + segments[j].as_str(), os_drive, root_dir) || command_found(segments[j].as_str());
             }
             if quote {
-                let temp = "".to_string() + &segs[j];
-                segs[j] = "\"".to_string() + &segs[j].replace(&drive("".to_string() + &segs[j]), "") + "\"";
+                let temp = "".to_string() + &segments[j];
+                segments[j] = "\"".to_string() + &segments[j].replace(&drive("".to_string() + &segments[j]), "") + "\"";
                 if temp.contains(&drive("".to_string() + &temp)) {
-                    segs[j] += &drive("".to_string() + &temp);
+                    segments[j] += &drive("".to_string() + &temp);
                 }
             }
-            line += &segs[j];
-            if j < segs.len() - 1 {
+            line += &segments[j];
+            if j < segments.len() - 1 {
                 line += "/";
             }
         }
