@@ -123,7 +123,8 @@ fn main() {
         index += 1;
     }
     for i in 0..args.len() {
-        let placeholder = "(PREVIOUS DIRECTORY PLACEHOLDER HERE)";
+        let dot = "CURRENT DIRECTORY PLACEHOLDER HERE";
+        let dot_dot = "PREVIOUS DIRECTORY PLACEHOLDER HERE";
         let mut line = "".to_string() + &args[i].replace("\\", "/");
         let mut sublines: Vec<String> = Vec::new();
         let temp:Vec<&str> = line.split(" ").collect();
@@ -155,16 +156,16 @@ fn main() {
                     if temp[temp.find("/../").unwrap() - 2..temp.find("/../").unwrap()].to_string() == ".." {
                         line = line.replacen(&previous[j], &path[j], 1);
                     } else {
-                        line = line.replacen("../", placeholder, 1);
+                        line = line.replacen("../", dot_dot, 1);
                     }
                 } else {
-                    line = line.replacen("../", placeholder, 1);
+                    line = line.replacen("../", dot_dot, 1);
                 }
             } else {
                 line = line.replacen(&previous[j], &path[j], 1);
             }
         }
-        line = line.replace("./", &(here.to_string() + "/")).replace(placeholder, "../") + "/";
+        line = line.replace("'./'", dot).replace("'../'", dot_dot).replace("'", "\"").replace("./", &(here.to_string() + "/")).replace(dot_dot, "../").replace(dot, "./") + "/";
         let mut segments: Vec<String> = Vec::new();
         while line.contains("/") {
             segments.push(line[..line.find("/").unwrap()].to_string());
