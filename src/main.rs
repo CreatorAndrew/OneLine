@@ -32,8 +32,9 @@ mod windows {
 }
 
 fn drive(path: String) -> String {
-    let letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-                               "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    let letters = [
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    ];
     let mut drive = "".to_string();
     for i in 0..letters.len() {
         drive = " ".to_string() + letters[i] + ":";
@@ -46,8 +47,12 @@ fn drive(path: String) -> String {
 
 fn exists(line: String, seg: String, os_drive: &str, root_dir: &str) -> bool {
     if line.contains(":/") {
-        return Path::new(&(line[line.rfind(":/").unwrap() - 1..].replace("\"", "").replacen(os_drive, root_dir, 1).to_string() +
-                                &seg.replacen(&drive(seg.to_string()), "", 1))).exists();
+        return Path::new(
+            &(
+                line[line.rfind(":/").unwrap() - 1..].replace("\"", "").replacen(os_drive, root_dir, 1).to_string() +
+                &seg.replacen(&drive(seg.to_string()), "", 1)
+            )
+        ).exists();
     }
     false
 }
